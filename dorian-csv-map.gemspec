@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 Gem::Specification.new do |s|
-  s.name = "dorian-csv-all"
+  s.name = "dorian-csv-map"
   s.version = "0.0.1"
-  s.summary = "Evaluates some code all lines of the csv input"
+  s.summary = "maps a csv file to another csv file"
   s.description =
-    "#{s.summary}\n\ne.g. `cat users.csv | csv-all --headers \"puts it.first[:name]\"`"
+    "#{s.summary}\n\ne.g. `cat users.csv | csv-map --headers \"it[:name].upcase!\"`"
   s.authors = ["Dorian Marié"]
   s.email = "dorian@dorianmarie.com"
-  s.files = ["bin/csv-all"]
-  s.executables << "csv-all"
-  s.homepage = "https://github.com/dorianmariecom/dorian-csv-all"
+  s.files = ["bin/csv-map"]
+  s.executables << "csv-map"
+  s.homepage = "https://github.com/dorianmariecom/dorian-csv-map"
   s.license = "MIT"
   s.metadata = { "rubygems_mfa_required" => "true" }
   s.add_dependency "csv"
