@@ -4,8 +4,7 @@ Gem::Specification.new do |s|
   s.name = "dorian-csv-map"
   s.version = "0.0.1"
   s.summary = "maps a csv file to another csv file"
-  s.description =
-    "#{s.summary}\n\ne.g. `cat users.csv | csv-map --headers \"it[:name].upcase!\"`"
+  s.description = s.summary
   s.authors = ["Dorian Marié"]
   s.email = "dorian@dorianmarie.com"
   s.files = ["bin/csv-map"]
@@ -14,5 +13,5 @@ Gem::Specification.new do |s|
   s.license = "MIT"
   s.metadata = { "rubygems_mfa_required" => "true" }
   s.add_dependency "csv"
-  s.add_dependency "activesupport"
+  s.add_dependency "dorian-to_struct"
 end
