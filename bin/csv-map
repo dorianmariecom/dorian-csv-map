@@ -2,41 +2,44 @@
 # frozen_string_literal: true
 
 require "csv"
-require "optparse"
-require "active_support"
-require "active_support/core_ext/hash/indifferent_access"
+require "dorian/to_struct"
+require "dorian/arguments"
 
-options = { headers: false }
+parsed =
+  Dorian::Arguments.parse(
+    headers: :boolean,
+    version: {
+      alias: :v
+    },
+    help: {
+      alias: :h
+    }
+  )
 
-argv =
-  OptionParser
-    .new do |opts|
-      opts.banner = "Usage: cat ... | csv-map [-h|--headers] RUBY\n\n"
+abort parsed.help if parsed.options.help
 
-      opts.on("-h", "--headers", "with headers") do |parse|
-        options[:headers] = true
+if parsed.options.version
+  abort File.read(File.expand_path("../../VERSION", __FILE__))
+end
+
+inputs = parsed.files.map { |file| File.read(file) }
+inputs = [$stdin.each_line.to_a.map(&:strip).join("\n")] if inputs.empty?
+headers = parsed.options.headers
+
+inputs.each do |input|
+  puts(
+    CSV.generate do |output|
+      input = CSV.parse(input, headers:)
+
+      output << input.headers if headers
+
+      input.each do |it|
+        it = headers ? it.to_h.to_struct : it.to_a
+
+        eval(parsed.arguments.join(" "))
+
+        output << it
       end
     end
-    .parse!
-
-abort "See --help" if argv.size != 1
-
-puts(
-  CSV.generate do |csv|
-    parsed = CSV.parse($stdin.each_line.to_a.join, headers: options[:headers])
-
-    csv << parsed.headers if options[:headers]
-
-    parsed.each do |it|
-      if options[:headers]
-        it = it.to_h.with_indifferent_access
-        eval(argv.first)
-        csv << it.values
-      else
-        it = it.to_a
-        eval(argv.first)
-        csv << it
-      end
-    end
-  end
-)
+  )
+end
