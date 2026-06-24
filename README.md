@@ -1,28 +1,41 @@
-# `dorian-each`
+# `dorian-csv-map`
 
-Evaluates some code on each line of the input
+Map CSV rows to a new CSV stream with Ruby.
 
-e.g. `ls -l | each "puts l.split.first"`
-
-### Install
+## Install
 
 ```bash
-gem install dorian-each
+gem install dorian-csv-map
 ```
 
-Or as part of my other gems:
+Also included in the aggregate gem:
 
 ```bash
 gem install dorian
 ```
 
-### Usage
-
-From my history:
+## Usage
 
 ```bash
-pbpaste | each "puts line.split('-')[1].split.first" | uniq
-git grep Thing test/ | grep isocode | each "puts l.split(':').first" | sort | uniq | xvim
-cat file.csv | each "code, name = l.split(\"\\t\"); if code.include?(','); puts code; else; puts code.gsub(' ', '') + ',' + name; end"
-git grep thing | grep " doc " | each "puts l.split(':').first" | xvim
+csv-map [options] [file ...] "ruby code"
+```
+
+Run `csv-map -h` for generated option details and `csv-map -v` for the installed version.
+
+## Notes
+
+- Mutate `it` inside the snippet. With `--headers`, headers are preserved and `it` is a struct.
+
+## Examples
+
+### Uppercase one column
+
+```bash
+echo a,b,c | csv-map "it[1].upcase!"
+```
+
+Output:
+
+```text
+a,B,c
 ```
